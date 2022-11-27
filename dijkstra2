@@ -48,6 +48,10 @@ int FindSmallvertex() {
 }
 
 void dijkstra() {
+	int h = 0;
+	for (int i = 1; i < 7; i++) {
+		path[i][0] = 1;
+	}
 	push(&q, 1, 0); 
 	D[1] = 0;
 	while (q.size) {
@@ -57,6 +61,15 @@ void dijkstra() {
 		for (int i = 1; i <= size; i++) {
 			if (D[i] > weight + map[vertex][i]) {
 				D[i] = weight + map[vertex][i];
+				while (1) {
+					if (path[vertex][h] == 0) {
+						path[i][h] = i;
+						break;
+					}
+					path[i][h] = path[vertex][h];
+					h++;
+				}
+				h = 0;
 				push(&q, i, D[i]);
 			}
 		}
