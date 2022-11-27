@@ -1,0 +1,77 @@
+#pragma once
+#include<stdio.h>
+void swap(int* a, int* b) {
+	int temp = *a;
+	*a = *b;
+	*b = temp;
+}
+typedef struct priorityqueue {
+	int vertex;
+	int size = 0;
+	int weight;
+	int data[1000][2];
+}PQ;
+
+void push(PQ* q,int vertext, int value) {
+	int i;
+	int temp1,temp2;
+	q->size++;
+	q->data[q->size][0] = vertext;
+	q->data[q->size][1] = value;
+	i = q->size;
+	while (i != 1) {
+		if (q->data[i / 2][1] <= q->data[i][1]) {
+			break;
+		}
+		else {
+			swap(&q->data[i / 2][0], &q->data[i][0]);
+			swap(&q->data[i / 2][1], &q->data[i][1]);
+		}
+	}
+	i = i / 2;
+}
+
+int Topvertex(PQ q) {
+	return q.data[1][0];
+}
+
+int Topweight(PQ q) {
+	return q.data[1][1];
+}
+
+void Delete(PQ* q) {
+	int i = 1;
+	int j;
+	q->data[1][0] = q->data[q->size][0];
+	q->data[1][1] = q->data[q->size][1];
+	q->size--;
+	while (1) {
+		if (i * 2 > q->size) {
+			break;
+		}
+		if (i * 2 == q->size) {
+			if (q->data[i][1] <= q->data[i * 2][1]) {
+				break;
+			}
+			else {
+				swap(&q->data[i * 2][0], &q->data[i][0]);
+				i = i * 2;
+			}
+		}
+		else {
+			if (q->data[i * 2][1] < a[i * 2 + 1]) {
+				j = i * 2;
+			}
+			else {
+				j = i * 2 + 1;
+			}
+			if (q->data[i][1] <= q->data[j][1]) {
+				break;
+			}
+			else {
+				swap(&q->data[j][0], &q->data[i][0]);
+				i = j;
+			}
+		}
+	}
+}
