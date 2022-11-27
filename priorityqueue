@@ -14,7 +14,6 @@ typedef struct priorityqueue {
 
 void push(PQ* q,int vertext, int value) {
 	int i;
-	int temp1,temp2;
 	q->size++;
 	q->data[q->size][0] = vertext;
 	q->data[q->size][1] = value;
@@ -27,8 +26,8 @@ void push(PQ* q,int vertext, int value) {
 			swap(&q->data[i / 2][0], &q->data[i][0]);
 			swap(&q->data[i / 2][1], &q->data[i][1]);
 		}
+		i = i / 2;
 	}
-	i = i / 2;
 }
 
 int Topvertex(PQ q) {
@@ -55,6 +54,7 @@ void Delete(PQ* q) {
 			}
 			else {
 				swap(&q->data[i * 2][0], &q->data[i][0]);
+				swap(&q->data[i * 2][1], &q->data[i][1]);
 				i = i * 2;
 			}
 		}
@@ -70,6 +70,7 @@ void Delete(PQ* q) {
 			}
 			else {
 				swap(&q->data[j][0], &q->data[i][0]);
+				swap(&q->data[i * 2][1], &q->data[i][1]);
 				i = j;
 			}
 		}
