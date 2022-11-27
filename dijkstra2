@@ -58,6 +58,7 @@ void dijkstra() {
 		int vertex = Topvertex(q);
 		int weight = Topweight(q);
 		Delete(&q);
+		if (weight > D[vertex]) continue;
 		for (int i = 1; i <= size; i++) {
 			if (D[i] > weight + map[vertex][i]) {
 				D[i] = weight + map[vertex][i];
