@@ -1,0 +1,126 @@
+#include<stdio.h>
+#include<stdlib.h>
+#include<string.h>
+#define MAX 1024
+
+int path[7][8] = { 0, }; //각 정점까지의 최단 거리 경로 넣을 곳
+char* s; //줄단위로 입력 받음 fgets 완료시 반환되는 값
+char line[MAX];
+char* token, * context; // token은 공백 기준 앞에 토큰, context는 남은 문자열
+int size; // 정점의 숫자
+int map[7][7] = {};
+int D[7] = {};
+int visited[7] = {};
+
+
+void init_map() {
+	for (int i = 1; i < 7; i++) {
+		for (int j = 1; j < 7; j++) {
+			 map[i][j] = MAX;
+		}
+	}
+}
+void init() {
+	for (int i = 1; i < 7; i++) {
+		visited[i] = 0;
+		D[i] = MAX;
+		for (int j = 1; j < 8; j++) {
+			path[i][j] = 0;
+		}
+	}
+}
+int FindSmallvertex() {
+	int min_value = MAX;
+	int min_idx=0;
+	for (int i = 1; i < 7; i++) {
+		if (visited[i]) continue;
+		if (min_value > D[i]) {
+			min_value = D[i];
+			min_idx = i;
+		}
+	}
+	return min_idx;
+
+}
+void dijkstra() {
+	int vertex;
+	int h = 0;
+	for (int i = 1; i < 7; i++) {
+		D[i] = map[1][i];
+		path[i][0] = 1;
+		path[i][1] = i;
+	}
+	for (int i = 1; i < 6; i++) {
+		vertex = FindSmallvertex();
+		visited[vertex] = 1;
+		for (int j = 1; j < 7; j++) {
+			if (visited[j]) continue;
+			if (D[j] > D[vertex] + map[vertex][j]){
+				D[j] = D[vertex] + map[vertex][j];
+				while (1) {
+					if (path[j][h] == 0) break;
+					path[j][h] = j;
+					h++;
+				}
+				h = 0;
+				while (1) {
+					if (path[vertex][h] == 0) {
+						path[j][h] = j;
+						break;
+					}
+					path[j][h] = path[vertex][h];
+					h++;
+				}
+				h = 0;
+			}
+		}
+	}
+}
+
+int main() {
+	FILE* file;
+	int l = 1;
+	int h = 0;
+	int temp,temp2;
+	if (fopen_s(&file, "input2.txt", "r") != 0) {
+		perror("fopen");
+		return 1;
+	}
+	init_map();
+	init();
+	while (!feof(file)) {
+		s = fgets(line, MAX, file);
+		token = strtok_s(s, " ", &context);
+		size = atoi(token);
+		for (int i = 1; i <= size; i++) {
+			s = fgets(line, MAX, file);
+			token = strtok_s(s, " ", &context);
+			while (1) {
+				s = strtok_s(NULL, " ", &context);
+				if (s != NULL) {
+					temp = atoi(s);
+					s = strtok_s(NULL, " ", &context);
+					temp2 = atoi(s);
+					map[atoi(token)][temp] = temp2;
+				}
+				else break;
+			}
+
+		}
+		dijkstra();
+		for (int i = 2; i <= size; i++) {
+			printf("정점 [%d] : ", i);
+			while (1) {
+				if (path[i][h] == 0) break;
+				printf("%d  - ", path[i][h]);
+				h++;
+
+			}
+			printf(" , 길이 :\%d \n", D[i]);
+			h = 0;
+		}
+		printf("\n");
+		init();
+		init_map();
+	}
+}
